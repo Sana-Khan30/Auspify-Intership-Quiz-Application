@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auspify QuizMaster — Interactive Online Quiz Application</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Background Decorative Shapes -->
+  <div class="bg-decor">
+    <div class="diamond d1"></div>
+    <div class="diamond d2"></div>
+    <div class="diamond d3"></div>
+    <div class="diamond d4"></div>
+    <div class="glow-orb orb1"></div>
+    <div class="glow-orb orb2"></div>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="brand" id="brandHome" title="Return to Home">
+      <div class="brand-logo">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4L35 34H27.5L20 18.5L12.5 34H5L20 4Z" fill="url(#brandGrad)"/>
+          <path d="M16 26L20 18L24 26H16Z" fill="#F97316"/>
+          <defs>
+            <linearGradient id="brandGrad" x1="5" y1="4" x2="35" y2="34" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#0EA5E9"/>
+              <stop offset="1" stop-color="#2563EB"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">AUSPIFY</span>
+        <span class="brand-subtitle">QuizMaster Portal</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="high-score-pill" id="bestScoreBadge">
+        <span class="pill-icon">🏆</span>
+        <span>Best: <strong id="bestScoreValue">0%</strong></span>
+      </div>
+      <button class="icon-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Theme" title="Toggle Theme">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="quiz-container">
+    
+    <!-- SCREEN 1: HOME / SETUP SCREEN -->
+    <section id="homeScreen" class="screen active">
+      <div class="hero-badge">Task 4 • Interactive Assessment Platform</div>
+      <h1 class="hero-title">Master Your Knowledge with <span class="gradient-text">Interactive Quizzes</span></h1>
+      <p class="hero-description">
+        Choose a category, customize your difficulty and timer settings, and get instant performance analytics with detailed explanations.
+      </p>
+
+      <!-- Player Name & Settings Bar -->
+      <div class="setup-panel">
+        <div class="input-group">
+          <label for="playerNameInput">Your Name (for Certificate & Leaderboard)</label>
+          <input type="text" id="playerNameInput" placeholder="Enter your name (e.g., Danish)" maxlength="32" />
+        </div>
+
+        <div class="settings-row">
+          <div class="setting-item">
+            <label for="questionCountSelect">Questions</label>
+            <select id="questionCountSelect">
+              <option value="5">5 Questions (Quick)</option>
+              <option value="10" selected>10 Questions (Standard)</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label for="timerModeSelect">Timer per Question</label>
+            <select id="timerModeSelect">
+              <option value="15">15 Seconds (Blitz)</option>
+              <option value="30" selected>30 Seconds (Standard)</option>
+              <option value="60">60 Seconds (Relaxed)</option>
+              <option value="0">Untimed Mode</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label for="instantFeedbackToggle">Feedback Mode</label>
+            <select id="instantFeedbackToggle">
+              <option value="instant" selected>Instant Explanation</option>
+              <option value="exam">Exam Mode (End Only)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Selection Grid -->
+      <div class="section-header">
+        <h2>Select a Quiz Topic</h2>
+        <span class="topic-hint">Click any category card to select</span>
+      </div>
+
+      <div class="category-grid" id="categoryGrid">
+        <!-- Dynamically populated from JavaScript database -->
+      </div>
+
+      <div class="start-actions">
+        <button id="startQuizBtn" class="btn btn-primary btn-lg">
+          <span>Start Quiz Now</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: ACTIVE QUIZ SCREEN -->
+    <section id="quizScreen" class="screen">
+      <!-- Quiz Top Status Bar -->
+      <div class="quiz-topbar">
+        <div class="quiz-meta">
+          <span class="category-tag" id="activeCategoryTag">JavaScript & DOM</span>
+          <span class="question-counter" id="questionCounterText">Question 1 of 10</span>
+        </div>
+
+        <div class="quiz-stats">
+          <div class="streak-pill" id="streakBadge" title="Current Correct Streak">
+            🔥 <span id="streakCount">0</span>
+          </div>
+          <div class="timer-pill" id="timerBadge">
+            <svg class="timer-svg" viewBox="0 0 36 36">
+              <path class="timer-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="timer-progress" id="timerCircle" stroke-dasharray="100, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <span id="timerText">30s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Bar & Question Navigator Dots -->
+      <div class="progress-wrapper">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <div class="question-dots" id="questionDotsContainer"></div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="question-card" id="questionCard">
+        <div class="question-header">
+          <span class="difficulty-badge" id="questionDifficulty">Medium</span>
+          <span class="points-badge" id="questionPoints">+10 pts</span>
+        </div>
+        <h2 class="question-text" id="questionText">Loading question...</h2>
+        <div id="codeSnippetBox" class="code-snippet hidden"></div>
+
+        <!-- Options List -->
+        <div class="options-container" id="optionsContainer" role="radiogroup" aria-label="Answer Options">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Instant Explanation Feedback Box -->
+        <div id="explanationBox" class="explanation-box hidden">
+          <div class="explanation-title" id="explanationTitle">💡 Explanation</div>
+          <p class="explanation-text" id="explanationText"></p>
+        </div>
+      </div>
+
+      <!-- Quiz Bottom Controls -->
+      <div class="quiz-footer">
+        <div class="footer-left">
+          <button id="prevQuestionBtn" class="btn btn-secondary" disabled>
+            ← Previous
+          </button>
+          <button id="quitQuizBtn" class="btn btn-ghost">
+            Quit Quiz
+          </button>
+        </div>
+        <div class="footer-right">
+          <span class="keyboard-hint">Tip: Press keys <kbd>1</kbd>-<kbd>4</kbd> or <kbd>Enter</kbd></span>
+          <button id="nextQuestionBtn" class="btn btn-primary">
+            Next Question →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: RESULTS & ANALYTICS SCREEN -->
+    <section id="resultScreen" class="screen">
+      <div class="result-header">
+        <div class="trophy-badge" id="resultTrophy">🏆</div>
+        <h1 class="result-title" id="resultHeadline">Outstanding Performance!</h1>
+        <p class="result-subtitle" id="resultSubheadline">Here is your complete score breakdown and question analysis.</p>
+      </div>
+
+      <!-- Score Circular Gauge & Summary Metrics -->
+      <div class="result-overview-grid">
+        <div class="score-ring-card">
+          <div class="circular-chart-wrapper">
+            <svg viewBox="0 0 120 120" class="circular-chart">
+              <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
+              <circle class="circle-progress" id="finalScoreCircle" cx="60" cy="60" r="50" stroke-dasharray="0 314"></circle>
+            </svg>
+            <div class="score-ring-center">
+              <span class="final-percentage" id="finalPercentageText">0%</span>
+              <span class="final-grade" id="finalGradeBadge">Grade A+</span>
+            </div>
+          </div>
+          <div class="score-points-line">
+            Total Score: <strong id="finalPointsText">0 / 100 pts</strong>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card correct">
+            <span class="metric-icon">✅</span>
+            <div class="metric-info">
+              <span class="metric-value" id="correctCountText">0</span>
+              <span class="metric-label">Correct Answers</span>
+            </div>
+          </div>
+
+          <div class="metric-card wrong">
+            <span class="metric-icon">❌</span>
+            <div class="metric-info">
+              <span class="metric-value" id="wrongCountText">0</span>
+              <span class="metric-label">Incorrect Answers</span>
+            </div>
+          </div>
+
+          <div class="metric-card skipped">
+            <span class="metric-icon">⏱️</span>
+            <div class="metric-info">
+              <span class="metric-value" id="skippedCountText">0</span>
+              <span class="metric-label">Unanswered / Timed Out</span>
+            </div>
+          </div>
+
+          <div class="metric-card time">
+            <span class="metric-icon">⚡</span>
+            <div class="metric-info">
+              <span class="metric-value" id="timeTakenText">0s</span>
+              <span class="metric-label">Total Time Spent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="result-actions">
+        <button id="retryQuizBtn" class="btn btn-primary">
+          🔄 Retake Same Quiz
+        </button>
+        <button id="newCategoryBtn" class="btn btn-secondary">
+          📚 Choose New Topic
+        </button>
+        <button id="toggleReviewBtn" class="btn btn-outline">
+          🔍 Review Answers & Explanations
+        </button>
+      </div>
+
+      <!-- Detailed Answer Review Section -->
+      <div id="reviewSection" class="review-section">
+        <div class="review-header-bar">
+          <h3>Detailed Question-by-Question Review</h3>
+          <div class="review-filters">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="correct">Correct</button>
+            <button class="filter-chip" data-filter="incorrect">Incorrect / Timed Out</button>
+          </div>
+        </div>
+        <div id="reviewListContainer" class="review-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Recent Attempts History -->
+      <div class="history-section">
+        <div class="history-header">
+          <h3>Recent Quiz Attempts</h3>
+          <button id="clearHistoryBtn" class="btn-text-danger">Clear History</button>
+        </div>
+        <div id="historyTableWrapper" class="history-table-wrapper">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Task 4 (Medium) — Online Quiz Application • Built with Vanilla HTML5, CSS3 &amp; ES6 JavaScript</p>
+  </footer>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
